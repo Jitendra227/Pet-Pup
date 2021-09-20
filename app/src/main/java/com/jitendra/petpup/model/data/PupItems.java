@@ -1,19 +1,46 @@
 package com.jitendra.petpup.model.data;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PupItems implements Serializable {
-    private String breeds;
 
-    public PupItems(String breeds) {
-        this.breeds = breeds;
+    @SerializedName("message")
+    private String message = null;
+    @SerializedName("status")
+    private String status;
+
+    public PupItems(String message, String status) {
+        this.message = message;
+        this.status = status;
     }
 
-    public String getBreeds() {
-        return breeds;
+    public String getMessage() {
+        return message;
     }
 
-    public void setBreeds(String breeds) {
-        this.breeds = breeds;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+    @Override
+    public String toString() {
+        return
+                "Response{" +
+                        "message = '" + message + '\'' +
+                        ",status = '" + status + '\'' +
+                        "}";
     }
 }

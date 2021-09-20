@@ -22,8 +22,8 @@ public class PupListAdapter extends RecyclerView.Adapter<PupListAdapter.ViewHold
 
     private static final String TAG = "PupListAdapter";
 
-    ArrayList<PupItems> pupItems;
-    Context context;
+    private ArrayList<PupItems> pupItems;
+    private Context context;
 
 
     public PupListAdapter(ArrayList<PupItems> pupItems, Context context) {
@@ -40,7 +40,8 @@ public class PupListAdapter extends RecyclerView.Adapter<PupListAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(pupItems.get(position));
+        PupItems details = pupItems.get(position);
+        holder.pupName.setText(details.getMessage().toString());
     }
 
     @Override
@@ -49,22 +50,12 @@ public class PupListAdapter extends RecyclerView.Adapter<PupListAdapter.ViewHold
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private Button pupName;
+        private final Button pupName;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             pupName = itemView.findViewById(R.id.pup_name_btn);
         }
 
-        public void bind(PupItems pupItems) {
-            pupName.setText(pupItems.getBreeds());
-
-            pupName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d(TAG, "onClick: successfully clicked");
-                }
-            });
-        }
     }
 }
