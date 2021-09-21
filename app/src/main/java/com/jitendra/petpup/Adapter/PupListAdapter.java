@@ -22,13 +22,15 @@ public class PupListAdapter extends RecyclerView.Adapter<PupListAdapter.ViewHold
 
     private static final String TAG = "PupListAdapter";
 
-    private ArrayList<PupItems> pupItems;
-    private Context context;
+    ArrayList<PupItems> pupItems;
+    Context context;
+    int resources;
 
 
-    public PupListAdapter(ArrayList<PupItems> pupItems, Context context) {
+    public PupListAdapter(ArrayList<PupItems> pupItems, Context context, int resources) {
         this.pupItems = pupItems;
         this.context = context;
+        this.resources = resources;
     }
 
     @NonNull
@@ -41,7 +43,8 @@ public class PupListAdapter extends RecyclerView.Adapter<PupListAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PupItems details = pupItems.get(position);
-        holder.pupName.setText(details.getMessage().toString());
+
+        holder.pupName.setText(details.getMessage());
     }
 
     @Override
@@ -50,7 +53,7 @@ public class PupListAdapter extends RecyclerView.Adapter<PupListAdapter.ViewHold
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final Button pupName;
+        private Button pupName;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

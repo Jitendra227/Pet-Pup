@@ -34,13 +34,4 @@ public class PupItems implements Serializable {
         this.status = status;
     }
 
-
-    @Override
-    public String toString() {
-        return
-                "Response{" +
-                        "message = '" + message + '\'' +
-                        ",status = '" + status + '\'' +
-                        "}";
-    }
 }
