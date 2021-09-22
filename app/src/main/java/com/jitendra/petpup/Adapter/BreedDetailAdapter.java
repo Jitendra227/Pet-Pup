@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.ActivityChooserView;
@@ -33,6 +34,7 @@ import com.jitendra.petpup.R;
 import com.jitendra.petpup.model.data.BreedImages;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -94,39 +96,21 @@ public class BreedDetailAdapter extends RecyclerView.Adapter<BreedDetailAdapter.
             downloadBtn = itemView.findViewById(R.id.download_btn);
         }
 
-
-//        public void bind(PupImages pupImages) {
-//            GlideToVectorYou
-//                    .init()
-//                    .with(context)
-//                    .withListener(new GlideToVectorYouListener() {
-//                        @Override
-//                        public void onLoadFailed() {
-////                            Toast.makeText(context, "Load failed", Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                        @Override
-//                        public void onResourceReady() {
-////                            Toast.makeText(context, "Image ready", Toast.LENGTH_SHORT).show();
-//                        }
-//                    })
-//                    .load(Uri.parse(pupImages.getMessage()), breedImages);
-//        }
     }
     private void saveImage(ViewHolder holder) {
-        ActivityCompat.requestPermissions(activity, new String[]  {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
 
         FileOutputStream fileOutputStream = null;
         File file = getDisc();
 
-        if(file.exists() && !file.mkdir()) {
-            file.mkdir();
+        if(!file.exists() && !file.mkdirs()) {
+            file.mkdirs();
 
         }
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyymmddhhmmss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         String date = simpleDateFormat.format(new Date());
-        String name = "img" + date+ ".jpg";
+        String name = "IMG" + date+ ".jpg";
         String file_name = file.getAbsolutePath()+"/"+name;
         File newFile = new File(file_name);
 
@@ -135,10 +119,13 @@ public class BreedDetailAdapter extends RecyclerView.Adapter<BreedDetailAdapter.
             Bitmap bitmap = draw.getBitmap();
             fileOutputStream = new FileOutputStream(newFile);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+            Toast.makeText(context, "image downloaded", Toast.LENGTH_SHORT).show();
             fileOutputStream.flush();
             fileOutputStream.close();
 
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -153,7 +140,7 @@ public class BreedDetailAdapter extends RecyclerView.Adapter<BreedDetailAdapter.
 
     private File getDisc() {
         File file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        return new File(file,"breed Picture");
+        return new File(file,"BreedPics");
     }
 
 }

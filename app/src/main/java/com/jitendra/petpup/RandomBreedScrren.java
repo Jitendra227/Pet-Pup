@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 ;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -57,7 +59,7 @@ public class RandomBreedScrren extends AppCompatActivity {
     private void buildRecyclerView() {
         randomScreenAdapter = new RandomScreenAdapter(RandomBreedScrren.this, imageLists, R.layout.pup_list);
 
-        LinearLayoutManager manager = new LinearLayoutManager(this);
+        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, LinearLayout.VERTICAL);
         recyclerView.setHasFixedSize(true);
 
         recyclerView.setLayoutManager(manager);

@@ -42,7 +42,7 @@ public class BreedDetailScreen extends AppCompatActivity {
     private RecyclerView recyclerView;
     private BreedDetailAdapter breedDetailAdapter;
 
-    //private static final String urll = "https://dog.ceo/api/breed/shihtzu/images/random/10";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class BreedDetailScreen extends AppCompatActivity {
         Intent intent = getIntent();
         String breedName = intent.getExtras().getString("breed_name_list");
 
-        String IMG_URL = "https://dog.ceo/api/breed/{breedName}/images/random/10";
+        String IMG_URL = "https://dog.ceo/api/breed/"+breedName+"/images/random/10";
 
 
         fetchBreedImages(IMG_URL);
