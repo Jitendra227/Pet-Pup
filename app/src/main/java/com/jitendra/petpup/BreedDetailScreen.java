@@ -1,11 +1,15 @@
 package com.jitendra.petpup;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BreedDetailScreen extends AppCompatActivity {
 
@@ -59,7 +64,7 @@ public class BreedDetailScreen extends AppCompatActivity {
     }
 
     private void buildRecyclerView() {
-        breedDetailAdapter = new BreedDetailAdapter(imageList, BreedDetailScreen.this, R.layout.specific_breed_pics);
+        breedDetailAdapter = new BreedDetailAdapter(imageList, BreedDetailScreen.this, R.layout.specific_breed_pics, BreedDetailScreen.this);
         LinearLayoutManager manager = new LinearLayoutManager(this);
 
         recyclerView.setHasFixedSize(true);
@@ -98,6 +103,7 @@ public class BreedDetailScreen extends AppCompatActivity {
         });
         queue.add(stringRequest);
     }
+
 }
 
 
