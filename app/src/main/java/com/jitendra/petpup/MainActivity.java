@@ -1,12 +1,19 @@
 package com.jitendra.petpup;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -16,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.navigation.NavigationView;
 import com.jitendra.petpup.Adapter.PupListAdapter;
 import com.jitendra.petpup.model.data.PupItems;
 
@@ -27,9 +35,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String TAG = "Mainactivittyy";
+    private DrawerLayout drawerLayout;
+
+    private ActionBarDrawerToggle toggle = null;
+    private NavigationView navView;
 
     private RecyclerView recyclerView;
     private ArrayList<PupItems> nameList;
@@ -47,43 +59,97 @@ public class MainActivity extends AppCompatActivity {
 
         nameList = new ArrayList<>();
 
+        drawerLayout = findViewById(R.id.drawerLayout);
+        navView = findViewById(R.id.nav_view);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
 
         extractBreedNameFromJson();
+        
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        
+        navView.setNavigationItemSelectedListener(this);
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                //Log.i(TAG, "onDrawerSlide");
+            }
 
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                Log.i(TAG, "onDrawerOpened");
+            }
 
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                Log.i(TAG, "onDrawerClosed");
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                //Log.i(TAG, "onDrawerStateChanged");
+            }
+        });
     }
 
-//    private void fetchData() {
-//        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-//                response -> {
-//                    recyclerView.setVisibility(View.VISIBLE);
-//                    JSONObject msg = obj.getJSONObject("message");
-//
-//                        try {
-//                            Log.d(TAG, "onResponse: successfull");
-//
-//                            JSONOArray obj = response.getJSONObject(i);
-//                            String breedName = obj.getString("message");
-//                            nameList.add(new PupItems(breedName, "succcess"));
-//                            buildRecyclerView();
-//                        } catch (JSONException e) {
-//                            Log.d(TAG, "onResponse: unsuccessful!!");
-//                            e.printStackTrace();
-//                        }
-//
-//
-//                }, new com.android.volley.Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(MainActivity.this, "Failed to get data", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        queue.add(jsonObjectRequest);
-//    }
-//
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = findViewById(R.id.drawerLayout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(toggle.onOptionsItemSelected(item)){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            if (getApplicationContext()==MainActivity.this){
+                Toast.makeText(this, "Already in home screen", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent);
+            }
+
+
+        } else if (id == R.id.nav_RandomScreen) {
+            if (getApplicationContext()==MainActivity.this){
+                Toast.makeText(this, "Already in random screen", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Intent intent = new Intent(getApplicationContext(), RandomBreedScrren.class);
+                startActivity(intent);
+            }
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawerLayout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
     private void buildRecyclerView() {
-        pupListAdapter = new PupListAdapter(nameList, MainActivity.this, R.layout.pup_list);
+        pupListAdapter = new PupListAdapter(nameList, MainActivity.this, R.layout.pup_list, new PupListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(PupItems item) {
+                Intent intent = new Intent(MainActivity.this, BreedDetailScreen.class);
+                intent.putExtra("breed_name_list", item.getMessage().toString());
+                startActivity(intent);
+            }
+        });
+
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
 
@@ -116,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("key", key);
 
                                 nameList.add(new PupItems(key,"success"));
+
                             }
 
                             Log.d("messageObj", msg.toString());
@@ -142,34 +209,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        //adding the string request to request queue
         requestQueue.add(stringRequest);
     }
 
-
-
 }
-
-
-//    private void fetchData() {
-//        Call<List<PupItems>> call = apiCallInterface.getPupList();
-//
-//        call.enqueue(new Callback<List<PupItems>>() {
-//            @Override
-//            public void onResponse(Call<List<PupItems>> call, Response<List<PupItems>> response) {
-//                if(!response.isSuccessful()){
-//                    Log.d(TAG, "onResponse: Failed");
-//                    return;
-//                }
-//
-//                Log.d(TAG, "onResponse: Successful");
-//
-//
-//            @Override
-//            public void onFailure(Call<List<PupItems>> call, Throwable t) {
-//                Log.d(TAG, "onFailure: "+t.getMessage());
-//                t.printStackTrace();
-//
-//            }
-//        });
-//    }

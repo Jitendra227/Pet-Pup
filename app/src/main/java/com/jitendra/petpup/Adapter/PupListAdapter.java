@@ -1,12 +1,10 @@
 package com.jitendra.petpup.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,21 +14,21 @@ import com.jitendra.petpup.model.data.PupItems;
 
 import java.util.ArrayList;
 
-import static android.widget.Toast.LENGTH_SHORT;
-
 public class PupListAdapter extends RecyclerView.Adapter<PupListAdapter.ViewHolder> {
 
     private static final String TAG = "PupListAdapter";
 
+    private final OnItemClickListener listener;
     ArrayList<PupItems> pupItems;
     Context context;
     int resources;
 
 
-    public PupListAdapter(ArrayList<PupItems> pupItems, Context context, int resources) {
+    public PupListAdapter(ArrayList<PupItems> pupItems, Context context, int resources, OnItemClickListener listener) {
         this.pupItems = pupItems;
         this.context = context;
         this.resources = resources;
+        this.listener = listener;
     }
 
     @NonNull
@@ -42,9 +40,11 @@ public class PupListAdapter extends RecyclerView.Adapter<PupListAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        PupItems details = pupItems.get(position);
 
-        holder.pupName.setText(details.getMessage());
+        holder.bind(pupItems.get(position), listener);
+        //PupItems details = pupItems.get(position);
+
+        //holder.pupName.setText(details.getMessage());
     }
 
     @Override
@@ -52,13 +52,23 @@ public class PupListAdapter extends RecyclerView.Adapter<PupListAdapter.ViewHold
         return pupItems.size();
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(PupItems item);
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private Button pupName;
+        private final Button pupName;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             pupName = itemView.findViewById(R.id.pup_name_btn);
         }
 
+        public void bind(PupItems pupItems, OnItemClickListener listener) {
+
+            pupName.setText(pupItems.getMessage());
+
+            pupName.setOnClickListener(v -> listener.onItemClick(pupItems));
+        }
     }
 }

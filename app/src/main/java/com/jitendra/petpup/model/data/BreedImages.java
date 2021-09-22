@@ -1,22 +1,14 @@
 package com.jitendra.petpup.model.data;
 
-import com.google.gson.annotations.SerializedName;
+public class BreedImages {
+    String message;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-public class PupItems implements Serializable {
-
-    @SerializedName("message")
-    private String message = null;
-    @SerializedName("status")
-    private String status;
-
-    public PupItems(String message, String status) {
+    public BreedImages(String message, String status) {
         this.message = message;
         this.status = status;
     }
+
+    String status;
 
     public String getMessage() {
         return message;
@@ -33,6 +25,4 @@ public class PupItems implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
-
-
 }
